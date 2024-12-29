@@ -31,14 +31,26 @@ scaler = StandardScaler()
 X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
 
+
+selected_model = st.selectbox("Select a model", ["Linear Regression", "Ridge", "Lasso", "ElasticNet"])
+
 # intiate the model
-model= LinearRegression()
+models={
+    "Linear Regression": LinearRegression(),
+    "Ridge": Ridge(),
+    "Lasso": Lasso(),
+    "ElasticNet": ElasticNet()}
+
+# train the selected model
+final_model = models[selected_model] # from dictionary whatever model user has selected 
+# intialize that model only
+
 
 # train the model
-model.fit(X_train, y_train)
+final_model.fit(X_train, y_train)
 
 # make predictions
-y_pred = model.predict(X_test)
+y_pred = final_model.predict(X_test)
 
 # EVALUATE THE MODEL
 # calculate the metrics
@@ -70,6 +82,6 @@ user_input_df= pd.DataFrame(user_input, index=[0])
 user_input_df_sc= scaler.transform(user_input_df)
 
 # predict the price of the house
-price = model.predict(user_input_df_sc)
+price = final_model.predict(user_input_df_sc)
 
-st.write(f"Predicted Pricefor this particular house is ${price[0]*100000} (USD)")
+st.write(f"Predicted Pricefor this particular house is ${np.round(price[0]*100000), 2} (USD)")
